@@ -8,6 +8,7 @@ import SignUp from "./components/SignUp";
 import Header from "./components/Header";
 import { DASBOARD, SIGN_IN, SIGN_UP } from "./consts";
 import { Box, CircularProgress } from "@mui/material";
+import NotYet from "./components/NotYet";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -38,7 +39,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
+      {/* <Routes>
         <Route
           path="/"
           element={
@@ -74,9 +75,44 @@ function App() {
             )
           }
         />
-      </Routes>
-
-      
+      </Routes> */}
+      {loggedInUser ? (
+        <Routes>
+          <Route
+            path={`/${SIGN_IN}`}
+            element={<Navigate to={`/${DASBOARD}`} />}
+          />
+          <Route
+            path={`/${SIGN_UP}`}
+            element={<Navigate to={`/${DASBOARD}`} />}
+          />
+          <Route path="/" element={<Navigate to={`/${DASBOARD}`} />} />
+          <Route
+            path={`/${DASBOARD}`}
+            element={
+              <>
+                <Header loggedInUser={loggedInUser} />
+                <DataBase />
+              </>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <>
+                <Header loggedInUser={loggedInUser} />
+                <NotYet />
+              </>
+            }
+          />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path={`/${SIGN_IN}`} element={<SignIn />} />
+          <Route path={`/${SIGN_UP}`} element={<SignUp />} />
+          <Route path="*" element={<Navigate to={`/${SIGN_IN}`} />} />
+        </Routes>
+      )}
     </BrowserRouter>
   );
 }
