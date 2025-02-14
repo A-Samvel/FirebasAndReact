@@ -8,9 +8,11 @@ import {
   deleteDoc,
   doc,
 } from "../firbaseconfigs";
+import Users from "./Users";
 
 export default function DataBase() {
   const [books, setBooks] = useState([]);
+  const [name,setName] = useState([])
   const [newBook, setNewBook] = useState({
     Author: "",
     Title: "",
@@ -165,6 +167,15 @@ export default function DataBase() {
           ))}
         </tbody>
       </table>
+
+      <br />
+      <br />
+      <br />
+      <br />
+
+      <div>
+        <Users/>
+      </div>
     </div>
   );
 }

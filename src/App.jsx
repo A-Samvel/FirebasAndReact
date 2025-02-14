@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firbaseconfigs";
+import { auth, db, doc } from "./firbaseconfigs";
 import DataBase from "./components/Database";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import { DASBOARD, SIGN_IN, SIGN_UP } from "./consts";
 import { Box, CircularProgress } from "@mui/material";
 import NotYet from "./components/NotYet";
+import { getDoc } from "firebase/firestore";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -16,8 +17,19 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setLoggedInUser(user);
-      setLoading(false);
+      if (user) {
+        const docRef = doc(db, "Users", user.uid);
+        getDoc(docRef)
+          .then((s) => {
+            setLoggedInUser(s.data());
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } else {
+        setLoggedInUser(null);
+        setLoading(false)
+      }
     });
     return () => unsubscribe();
   }, []);

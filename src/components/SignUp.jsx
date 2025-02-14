@@ -1,9 +1,11 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { auth } from "../firbaseconfigs";
+import { auth, collection, db, doc } from "../firbaseconfigs";
 import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { DASBOARD, SIGN_IN } from "../consts";
+import { addDoc } from "firebase/firestore/lite";
+import { setDoc } from "firebase/firestore";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -14,6 +16,11 @@ export default function SignUp() {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        // console.log("User :", user)
+        const docRef = doc(db, "Users", user.uid);
+        setDoc(docRef, {email}).then(()=>{
+          console.log("asd")
+        });
         navigate(`/${DASBOARD}`);
       })
       .catch((e) => {
